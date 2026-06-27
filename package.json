@@ -1,0 +1,83 @@
+{
+  "name": "twitch-music-bot",
+  "version": "1.0.0",
+  "description": "Twitch music request bot with YouTube integration",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "start": "npm run build && /usr/bin/electron . --ozone-platform=wayland --enable-features=WaylandWindowDecorations",
+    "dev": "concurrently \"npm run watch:main\" \"npm run watch:renderer\" \"http-server dist/renderer -p 3000 --cors -c-1\" \"wait-on http://localhost:3000 && /usr/bin/electron . --ozone-platform=wayland --enable-features=WaylandWindowDecorations\"",
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc",
+    "build:renderer": "webpack --config webpack.renderer.config.js",
+    "watch:main": "tsc -w",
+    "watch:renderer": "webpack --config webpack.renderer.config.js --watch"
+  },
+  "build": {
+    "appId": "com.twitchmusicbot.app",
+    "productName": "Twitch Music Bot",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "dist/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "sidecar",
+        "to": "sidecar"
+      }
+    ]
+  },
+  "keywords": [
+    "twitch",
+    "music",
+    "youtube",
+    "electron"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.19.42",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "concurrently": "^8.0.0",
+    "css-loader": "^7.1.4",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.0.0",
+    "html-webpack-plugin": "^5.0.0",
+    "http-server": "^14.1.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.0.0",
+    "typescript": "^5.0.0",
+    "wait-on": "^7.0.0",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^5.0.0",
+    "webpack-dev-server": "^4.0.0"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.0.0",
+    "@emotion/styled": "^11.0.0",
+    "@mui/icons-material": "^5.0.0",
+    "@mui/material": "^5.0.0",
+    "@twurple/api": "^8.1.4",
+    "@twurple/auth": "^8.1.4",
+    "@twurple/eventsub-ws": "^8.1.4",
+    "axios": "^1.0.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "open": "^11.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-player": "^2.16.0",
+    "react-router-dom": "^6.0.0",
+    "react-youtube": "^10.1.0",
+    "socket.io-client": "^4.0.0",
+    "youtube-player": "^5.0.0",
+    "yt-dlp-wrap": "^2.3.12"
+  },
+  "allowScripts": {
+    "electron@28.3.3": true
+  }
+}
