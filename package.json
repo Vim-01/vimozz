@@ -11,13 +11,14 @@
     "build:renderer": "webpack --config webpack.renderer.config.js",
     "watch:main": "tsc -w",
     "watch:renderer": "webpack --config webpack.renderer.config.js --watch",
-    "postinstall": "node scripts/download-xray.js"
+    "postinstall": "node scripts/download-xray.js",
+    "dist": "electron-builder"
   },
   "build": {
     "appId": "com.vimozz.app",
     "productName": "Vimozz",
     "directories": {
-      "output": "dist"
+      "output": "release"
     },
     "files": [
       "dist/**/*",
@@ -29,7 +30,13 @@
         "from": "sidecar",
         "to": "sidecar"
       }
-    ]
+    ],
+    "linux": {
+      "target": "AppImage"
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "keywords": [
     "twitch",
