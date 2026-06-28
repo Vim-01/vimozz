@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container, Typography, Box, Button, Paper, List, ListItem, ListItemText,
   IconButton, Divider, Chip, TextField, Slider, Tabs, Tab, Switch, FormControlLabel,
-  Avatar, Card, CardContent, Select, MenuItem, FormControl, InputLabel,
-  Snackbar, Alert
+  Card, CardContent, Select, MenuItem, FormControl, InputLabel,
+  Snackbar, Alert, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from '@mui/material';
 import {
   PlayArrow, Pause, SkipNext, VolumeUp, Settings, QueueMusic, Link as LinkIcon
@@ -30,13 +30,18 @@ const StreamerPanel: React.FC = () => {
   const [useVless, setUseVless] = useState(false);
   const [rewards, setRewards] = useState<any[]>([]);
   const [snackbar, setSnackbar] = useState<{open: boolean, message: string, severity: 'success' | 'error' | 'info'}>({open: false, message: '', severity: 'info'});
+  
+  const [authWarningOpen, setAuthWarningOpen] = useState(false);
 
   const showNotification = (message: string, severity: 'success' | 'error' | 'info' = 'info') => {
     setSnackbar({ open: true, message, severity });
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if ((window as any).electronAPI) {
+      // Trigger silent auth on mount
+      (window as any).electronAPI.twitchLogin(true);
+
       (window as any).electronAPI.onTwitchAuthSuccess(async (_event: any, tokens: any) => {
         showNotification('Авторизация успешна! Инициализация EventSub...', 'info');
         const res = await (window as any).electronAPI.initializeEventSub(tokens);
@@ -51,10 +56,14 @@ const StreamerPanel: React.FC = () => {
         showNotification(`Ошибка авторизации Twitch: ${error}`, 'error');
       });
 
+      (window as any).electronAPI.onTwitchAuthInteractionRequired(() => {
+        // Silent auth failed, user must login manually
+        console.log('Silent auth failed, user interaction required.');
+      });
+
       (window as any).electronAPI.onRewardRedemption((_event: any, data: any) => {
         if (!selectedRewardId || selectedRewardId === '' || selectedRewardId === data.rewardId) {
           showNotification(`Выкуп награды от ${data.userName}!`, 'info');
-          // Actually we need QueueContext to add the request, but for now just show notif.
         }
       });
     }
@@ -123,6 +132,12 @@ const StreamerPanel: React.FC = () => {
     const m = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
     return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const proceedToTwitchLogin = async () => {
+    setAuthWarningOpen(false);
+    showNotification('Ожидание авторизации...', 'info');
+    await (window as any).electronAPI?.twitchLogin(false);
   };
 
   return (
@@ -258,10 +273,7 @@ const StreamerPanel: React.FC = () => {
           <Divider sx={{ my: 4 }} />
           
           <Typography variant="h6" mb={3}>Twitch Settings</Typography>
-          <Button variant="outlined" color="primary" onClick={async () => {
-            await (window as any).electronAPI?.twitchLogin();
-            showNotification('Ожидание авторизации...', 'info');
-          }} sx={{ mb: 2, mr: 2 }}>
+          <Button variant="outlined" color="primary" onClick={() => setAuthWarningOpen(true)} sx={{ mb: 2, mr: 2 }}>
             Login with Twitch
           </Button>
           <Button variant="outlined" color="secondary" onClick={fetchRewards} sx={{ mb: 2 }}>
@@ -286,7 +298,7 @@ const StreamerPanel: React.FC = () => {
             </FormControl>
           </Box>
           <Typography variant="body2" color="text.secondary" mt={2}>
-            Please configure EventSub Client ID and Secret in your .env file or settings.
+            Twitch Application authorization is fully managed. No Client Secret required.
           </Typography>
         </Paper>
       )}
@@ -301,6 +313,21 @@ const StreamerPanel: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      <Dialog open={authWarningOpen} onClose={() => setAuthWarningOpen(false)}>
+        <DialogTitle>Внимание: Политика безопасности</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            В целях безопасности ваш токен авторизации сбрасывается каждые 60 дней. Приложение будет пытаться автоматически продлить его при каждом запуске, но иногда может потребоваться повторный ручной вход.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAuthWarningOpen(false)}>Отмена</Button>
+          <Button onClick={proceedToTwitchLogin} variant="contained" autoFocus>
+            Понятно, войти
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

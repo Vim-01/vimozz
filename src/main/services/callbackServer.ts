@@ -10,17 +10,8 @@ export class CallbackServer {
     
     this.server = http.createServer((req, res) => {
       if (req.url?.startsWith('/callback')) {
-        const url = new URL(req.url, `http://localhost:3001`);
-        const code = url.searchParams.get('code');
-        
-        if (code) {
-          this.authService.handleCallback(code);
-          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-          res.end('<html><head><meta charset="utf-8"><title>Авторизация Twitch</title></head><body style="font-family: sans-serif; text-align: center; padding-top: 50px;"><h1>Успешная авторизация!</h1><p>Можете закрыть это окно и вернуться в приложение.</p></body></html>');
-        } else {
-          res.writeHead(400);
-          res.end('Authorization failed');
-        }
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        res.end('<html><head><meta charset="utf-8"><title>Авторизация Twitch</title></head><body style="font-family: sans-serif; text-align: center; padding-top: 50px;"><h1>Успешная авторизация!</h1><p>Пожалуйста, подождите несколько секунд...</p></body></html>');
       } else if (req.url?.startsWith('/proxy.pac')) {
         const url = new URL(req.url, `http://localhost:3001`);
         const port = url.searchParams.get('port') || '10808';

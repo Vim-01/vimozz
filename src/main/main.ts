@@ -72,19 +72,17 @@ app.on('before-quit', () => {
 });
 
 // Twitch
-ipcMain.handle('twitch-login', async () => {
-  await twitchAuthService.startAuth();
+ipcMain.handle('twitch-login', async (event, silent = false) => {
+  await twitchAuthService.startAuth(silent);
 });
 
-ipcMain.handle('initialize-eventsub', async (event: any, tokens: { accessToken: string, refreshToken: string }) => {
+ipcMain.handle('initialize-eventsub', async (event: any, tokens: { accessToken: string }) => {
   try {
     const userId = await eventSubService.initialize(
       tokens.accessToken,
-      tokens.refreshToken,
-      process.env.TWITCH_CLIENT_ID || '',
-      process.env.TWITCH_CLIENT_SECRET || ''
+      '0w8n7udc1rn3wufaphgjksw1tzt4jb'
     );
-
+    
     eventSubService.setRewardRedemptionCallback((redemption: RewardRedemption) => {
       if (mainWindow) {
         mainWindow.webContents.send('reward-redemption', redemption);
@@ -94,9 +92,9 @@ ipcMain.handle('initialize-eventsub', async (event: any, tokens: { accessToken: 
     await eventSubService.listenToChannelPoints();
 
     return { success: true, userId };
-  } catch (error) {
-    console.error('Error initializing EventSub:', error);
-    return { success: false, error: (error as Error).message };
+  } catch (error: any) {
+    console.error('Failed to initialize EventSub:', error);
+    return { success: false, error: error.message };
   }
 });
 

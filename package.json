@@ -1,6 +1,6 @@
 {
   "name": "vimozz",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vimozz - Twitch Music Bot with YouTube integration and anti-censorship bypass",
   "main": "dist/main/main.js",
   "scripts": {

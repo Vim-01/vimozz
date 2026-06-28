@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('electronAPI', {
   getObsWindowId: () => ipcRenderer.invoke('get-obs-window-id'),
 
-  twitchLogin: () => ipcRenderer.invoke('twitch-login'),
+  twitchLogin: (silent: boolean = false) => ipcRenderer.invoke('twitch-login', silent),
   twitchLogout: () => ipcRenderer.invoke('twitch-logout'),
 
   initializeEventSub: (tokens: any) => ipcRenderer.invoke('initialize-eventsub', tokens),
@@ -17,6 +17,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   },
   onTwitchAuthError: (callback: any) => {
     ipcRenderer.on('twitch-auth-error', callback);
+  },
+  onTwitchAuthInteractionRequired: (callback: any) => {
+    ipcRenderer.on('twitch-auth-interaction-required', callback);
   },
   onRewardRedemption: (callback: any) => {
     ipcRenderer.on('reward-redemption', (event, data) => callback(event, data));

@@ -1,89 +1,88 @@
 import axios from 'axios';
 const { BrowserWindow } = require('electron');
+
 export class TwitchAuthService {
   private clientId: string;
-  private clientSecret: string;
   private redirectUri: string;
   private accessToken: string | null = null;
-  private refreshToken: string | null = null;
   private authWindow: any = null;
   private mainWindow: any = null;
 
   constructor() {
-    this.clientId = process.env.TWITCH_CLIENT_ID || '';
-    this.clientSecret = process.env.TWITCH_CLIENT_SECRET || '';
-    this.redirectUri = process.env.TWITCH_REDIRECT_URI || 'http://localhost:3001/callback';
+    this.clientId = '0w8n7udc1rn3wufaphgjksw1tzt4jb';
+    this.redirectUri = 'http://localhost:3001/callback';
   }
 
   setMainWindow(window: any): void {
     this.mainWindow = window;
   }
 
-  async startAuth(): Promise<void> {
-    if (!this.clientId) {
-      throw new Error('Client ID is not configured');
-    }
-
+  async startAuth(silent: boolean = false): Promise<void> {
     const authUrl = `https://id.twitch.tv/oauth2/authorize` +
       `?client_id=${this.clientId}` +
       `&redirect_uri=${encodeURIComponent(this.redirectUri)}` +
-      `&response_type=code` +
+      `&response_type=token` +
       `&scope=channel:read:subscriptions+user:read:email+channel:read:redemptions+channel:manage:redemptions`;
 
     this.authWindow = new BrowserWindow({
       width: 600,
       height: 800,
+      show: !silent,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true
       }
     });
 
-    await this.authWindow.loadURL(authUrl);
-    this.authWindow.show();
-  }
-
-  handleCallback(code: string): void {
-    this.exchangeCodeForToken(code);
-  }
-
-  private async exchangeCodeForToken(code: string): Promise<void> {
-    try {
-      const response = await axios.post('https://id.twitch.tv/oauth2/token', null, {
-        params: {
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
-          code: code,
-          grant_type: 'authorization_code',
-          redirect_uri: this.redirectUri
+    const handleUrl = (url: string) => {
+      if (url.startsWith(this.redirectUri)) {
+        try {
+          const urlObj = new URL(url);
+          const hash = urlObj.hash.substring(1);
+          const params = new URLSearchParams(hash);
+          const accessToken = params.get('access_token');
+          
+          if (accessToken) {
+            this.accessToken = accessToken;
+            if (this.mainWindow) {
+              this.mainWindow.webContents.send('twitch-auth-success', { accessToken });
+            }
+            if (this.authWindow) {
+              this.authWindow.close();
+              this.authWindow = null;
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing token from URL', e);
         }
-      });
-
-      this.accessToken = response.data.access_token;
-      this.refreshToken = response.data.refresh_token;
-
-      if (this.authWindow) {
-        this.authWindow.close();
-        this.authWindow = null;
       }
+    };
 
-      if (this.mainWindow) {
-        this.mainWindow.webContents.send('twitch-auth-success', {
-          accessToken: this.accessToken,
-          refreshToken: this.refreshToken
-        });
+    this.authWindow.webContents.on('will-navigate', (event: any, url: string) => {
+      handleUrl(url);
+    });
+    
+    this.authWindow.webContents.on('did-redirect-navigation', (event: any, url: string) => {
+      handleUrl(url);
+    });
+
+    try {
+      await this.authWindow.loadURL(authUrl);
+      
+      // If silent auth fails to redirect within 5 seconds, user interaction is likely required.
+      if (silent) {
+        setTimeout(() => {
+          if (this.authWindow && !this.accessToken) {
+            this.authWindow.close();
+            this.authWindow = null;
+            if (this.mainWindow) {
+              this.mainWindow.webContents.send('twitch-auth-interaction-required');
+            }
+          }
+        }, 5000);
       }
-    } catch (error) {
-      console.error('Error exchanging code for token:', error);
-      
-      const errorMessage = axios.isAxiosError(error) 
-        ? error.response?.data?.message || error.message 
-        : 'Unknown error';
-      
-      if (this.mainWindow) {
-        this.mainWindow.webContents.send('twitch-auth-error', errorMessage);
-      }
-      
+    } catch (e) {
+      console.error('Failed to load auth URL', e);
       if (this.authWindow) {
         this.authWindow.close();
         this.authWindow = null;
@@ -93,9 +92,5 @@ export class TwitchAuthService {
 
   getAccessToken(): string | null {
     return this.accessToken;
-  }
-
-  getRefreshToken(): string | null {
-    return this.refreshToken;
   }
 }

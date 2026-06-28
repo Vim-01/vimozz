@@ -1,4 +1,4 @@
-import { AccessToken, RefreshingAuthProvider } from '@twurple/auth';
+import { StaticAuthProvider } from '@twurple/auth';
 import { ApiClient } from '@twurple/api';
 import { EventSubWsListener } from '@twurple/eventsub-ws';
 import axios from 'axios';
@@ -14,7 +14,7 @@ export interface RewardRedemption {
 }
 
 export class EventSubService {
-  private authProvider: RefreshingAuthProvider | null = null;
+  private authProvider: StaticAuthProvider | null = null;
   private apiClient: ApiClient | null = null;
   private eventSubListener: EventSubWsListener | null = null;
   private onRewardRedemption: ((redemption: RewardRedemption) => void) | null = null;
@@ -24,28 +24,15 @@ export class EventSubService {
     console.log('EventSubService initialized');
   }
 
-  async initialize(accessToken: string, refreshToken: string, clientId: string, clientSecret: string): Promise<string> {
+  async initialize(accessToken: string, clientId: string): Promise<string> {
     try {
-      console.log('Initializing EventSub with tokens...');
+      console.log('Initializing EventSub with token...');
 
-      this.authProvider = new RefreshingAuthProvider({
-        clientId,
-        clientSecret
-      });
-
-      const tokenData: AccessToken = {
-        accessToken,
-        refreshToken,
-        scope: ['channel:read:redemptions', 'channel:manage:redemptions', 'user:read:email'],
-        expiresIn: 14400,
-        obtainmentTimestamp: Date.now()
-      };
-
-      await this.authProvider.addUserForToken(tokenData, ['chat', 'channel', 'user']);
+      this.authProvider = new StaticAuthProvider(clientId, accessToken);
 
       this.apiClient = new ApiClient({ authProvider: this.authProvider });
 
-      // Получаем userId через запрос к Twitch API
+      // Get userId through Twitch API request
       const response = await axios.get('https://api.twitch.tv/helix/users', {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -60,7 +47,7 @@ export class EventSubService {
         throw new Error('Could not get user info from Twitch API');
       }
 
-      // Создаём EventSub WebSocket listener
+      // Create EventSub WebSocket listener
       this.eventSubListener = new EventSubWsListener({ apiClient: this.apiClient });
       this.eventSubListener.start();
 
@@ -85,7 +72,7 @@ export class EventSubService {
     try {
       console.log('Listening to channel point redemptions for user:', this.userId);
 
-      // Слушаем все выкупы наград канала
+      // Listen to channel point rewards
       this.eventSubListener.onChannelRedemptionAdd(this.userId, (redemption) => {
         console.log('Reward redeemed:', redemption.rewardTitle, 'by', redemption.userName);
 
@@ -127,7 +114,6 @@ export class EventSubService {
       throw new Error('Not initialized');
     }
     
-    // We can use the ApiClient or just simple fetch
     try {
       const rewards = await this.apiClient?.channelPoints.getCustomRewards(this.userId);
       return rewards ? rewards.map(r => ({
@@ -140,17 +126,7 @@ export class EventSubService {
       })) : [];
     } catch (e) {
       console.error('Error fetching custom rewards via twurple API Client:', e);
-      // Fallback to axios if ApiClient method name is slightly different in twurple
-      const token = await this.authProvider.getAccessTokenForUser(this.userId);
-      if (!token) return [];
-      
-      const response = await axios.get(`https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${this.userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token.accessToken}`,
-          'Client-Id': process.env.TWITCH_CLIENT_ID || ''
-        }
-      });
-      return response.data.data;
+      return [];
     }
   }
 }

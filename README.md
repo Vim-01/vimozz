@@ -11,8 +11,7 @@ Vimozz is a Twitch Music Bot with YouTube integration and anti-censorship bypass
 ## Setup
 1. Clone the repository.
 2. Run `npm install`.
-3. Set up your `.env` file with your Twitch API credentials.
-4. Run `npm run dev` for development, or use `npm run build` to build the app.
+3. Run `npm run dev` for development, or use `npm run build` to build the app.
 
 ## License
 This project is licensed under the AGPL-3.0 License. See the LICENSE file for more information.

@@ -1,0 +1,343 @@
+﻿2026-06-28T19:39:50.6422829Z Current runner version: '2.335.1'
+2026-06-28T19:39:50.6447030Z ##[group]Runner Image Provisioner
+2026-06-28T19:39:50.6448181Z Hosted Compute Agent
+2026-06-28T19:39:50.6448811Z Version: 20260611.554
+2026-06-28T19:39:50.6449476Z Commit: 5e0782fdc9014723d3be820dd114dd31555c2bd1
+2026-06-28T19:39:50.6450192Z Build Date: 2026-06-11T21:40:46Z
+2026-06-28T19:39:50.6450915Z Worker ID: {8d623b2a-960b-4446-97ee-cdd422cbdba9}
+2026-06-28T19:39:50.6451680Z Azure Region: westus
+2026-06-28T19:39:50.6452225Z ##[endgroup]
+2026-06-28T19:39:50.6453547Z ##[group]Operating System
+2026-06-28T19:39:50.6454196Z Microsoft Windows Server 2025
+2026-06-28T19:39:50.6454796Z 10.0.26100
+2026-06-28T19:39:50.6455300Z Datacenter
+2026-06-28T19:39:50.6455805Z ##[endgroup]
+2026-06-28T19:39:50.6456303Z ##[group]Runner Image
+2026-06-28T19:39:50.6456885Z Image: windows-2025-vs2026
+2026-06-28T19:39:50.6457470Z Version: 20260622.153.1
+2026-06-28T19:39:50.6458966Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260622.153/images/windows/Windows2025-VS2026-Readme.md
+2026-06-28T19:39:50.6460577Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260622.153
+2026-06-28T19:39:50.6461602Z ##[endgroup]
+2026-06-28T19:39:50.6462751Z ##[group]GITHUB_TOKEN Permissions
+2026-06-28T19:39:50.6464783Z Contents: read
+2026-06-28T19:39:50.6465355Z Metadata: read
+2026-06-28T19:39:50.6466319Z Packages: read
+2026-06-28T19:39:50.6466839Z ##[endgroup]
+2026-06-28T19:39:50.6469335Z Secret source: Actions
+2026-06-28T19:39:50.6470128Z Prepare workflow directory
+2026-06-28T19:39:50.6831674Z Prepare all required actions
+2026-06-28T19:39:50.6890522Z Getting action download info
+2026-06-28T19:39:51.0174232Z Download action repository 'actions/checkout@v3' (SHA:f43a0e5ff2bd294095638e18286ca9a3d1956744)
+2026-06-28T19:39:51.1406955Z Download action repository 'actions/setup-node@v3' (SHA:3235b876344d2a9aa001b8d1453c930bba69e610)
+2026-06-28T19:39:51.3161928Z Download action repository 'softprops/action-gh-release@v1' (SHA:de2c0eb89ae2a093876385947365aca7b0e5f844)
+2026-06-28T19:39:51.7572650Z Complete job name: build-windows
+2026-06-28T19:39:51.8831695Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-28T19:39:51.8840724Z ##[group]Run actions/checkout@v3
+2026-06-28T19:39:51.8841411Z with:
+2026-06-28T19:39:51.8841830Z   repository: Vim-01/vimozz
+2026-06-28T19:39:51.8846114Z   token: ***
+2026-06-28T19:39:51.8846524Z   ssh-strict: true
+2026-06-28T19:39:51.8846953Z   persist-credentials: true
+2026-06-28T19:39:51.8847424Z   clean: true
+2026-06-28T19:39:51.8847847Z   sparse-checkout-cone-mode: true
+2026-06-28T19:39:51.8848350Z   fetch-depth: 1
+2026-06-28T19:39:51.8848752Z   fetch-tags: false
+2026-06-28T19:39:51.8849162Z   lfs: false
+2026-06-28T19:39:51.8849572Z   submodules: false
+2026-06-28T19:39:51.8849993Z   set-safe-directory: true
+2026-06-28T19:39:51.8850664Z ##[endgroup]
+2026-06-28T19:39:51.9977053Z (node:740) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-28T19:39:51.9978382Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-28T19:39:52.0062384Z Syncing repository: Vim-01/vimozz
+2026-06-28T19:39:52.0064154Z ##[group]Getting Git version info
+2026-06-28T19:39:52.0064760Z Working directory is 'D:\a\vimozz\vimozz'
+2026-06-28T19:39:52.0844860Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-06-28T19:39:52.2402043Z git version 2.54.0.windows.1
+2026-06-28T19:39:52.2449367Z ##[endgroup]
+2026-06-28T19:39:52.2468438Z Temporarily overriding HOME='D:\a\_temp\a755bfe6-73bd-4eb9-a5ca-65cb2bcaf78e' before making global git config changes
+2026-06-28T19:39:52.2476105Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-28T19:39:52.2481153Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\vimozz\vimozz
+2026-06-28T19:39:52.2769802Z Deleting the contents of 'D:\a\vimozz\vimozz'
+2026-06-28T19:39:52.2775846Z ##[group]Initializing the repository
+2026-06-28T19:39:52.2782920Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\vimozz\vimozz
+2026-06-28T19:39:52.3377855Z Initialized empty Git repository in D:/a/vimozz/vimozz/.git/
+2026-06-28T19:39:52.3421018Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/Vim-01/vimozz
+2026-06-28T19:39:52.3738581Z ##[endgroup]
+2026-06-28T19:39:52.3739386Z ##[group]Disabling automatic garbage collection
+2026-06-28T19:39:52.3744367Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-06-28T19:39:52.4029476Z ##[endgroup]
+2026-06-28T19:39:52.4038308Z ##[group]Setting up auth
+2026-06-28T19:39:52.4039173Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-06-28T19:39:52.4324597Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-06-28T19:39:53.2448390Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-28T19:39:53.2736183Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-06-28T19:39:53.8279334Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-06-28T19:39:53.8588070Z ##[endgroup]
+2026-06-28T19:39:53.8588774Z ##[group]Fetching the repository
+2026-06-28T19:39:53.8601987Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --progress --no-recurse-submodules --depth=1 origin +2e1801b9f75c58a5fbc39fc6bf2d6c72a226062a:refs/remotes/origin/master
+2026-06-28T19:39:54.4919635Z remote: Enumerating objects: 49, done.        
+2026-06-28T19:39:54.5497814Z remote: Counting objects:   2% (1/49)        
+2026-06-28T19:39:54.5498604Z remote: Counting objects:   4% (2/49)        
+2026-06-28T19:39:54.5499228Z remote: Counting objects:   6% (3/49)        
+2026-06-28T19:39:54.5499691Z remote: Counting objects:   8% (4/49)        
+2026-06-28T19:39:54.5500219Z remote: Counting objects:  10% (5/49)        
+2026-06-28T19:39:54.5500705Z remote: Counting objects:  12% (6/49)        
+2026-06-28T19:39:54.5501191Z remote: Counting objects:  14% (7/49)        
+2026-06-28T19:39:54.5501645Z remote: Counting objects:  16% (8/49)        
+2026-06-28T19:39:54.5502083Z remote: Counting objects:  18% (9/49)        
+2026-06-28T19:39:54.5502504Z remote: Counting objects:  20% (10/49)        
+2026-06-28T19:39:54.5502988Z remote: Counting objects:  22% (11/49)        
+2026-06-28T19:39:54.5503432Z remote: Counting objects:  24% (12/49)        
+2026-06-28T19:39:54.5503858Z remote: Counting objects:  26% (13/49)        
+2026-06-28T19:39:54.5504323Z remote: Counting objects:  28% (14/49)        
+2026-06-28T19:39:54.5504814Z remote: Counting objects:  30% (15/49)        
+2026-06-28T19:39:54.5505246Z remote: Counting objects:  32% (16/49)        
+2026-06-28T19:39:54.5505672Z remote: Counting objects:  34% (17/49)        
+2026-06-28T19:39:54.5506089Z remote: Counting objects:  36% (18/49)        
+2026-06-28T19:39:54.5506517Z remote: Counting objects:  38% (19/49)        
+2026-06-28T19:39:54.5506936Z remote: Counting objects:  40% (20/49)        
+2026-06-28T19:39:54.5507353Z remote: Counting objects:  42% (21/49)        
+2026-06-28T19:39:54.5507773Z remote: Counting objects:  44% (22/49)        
+2026-06-28T19:39:54.5508211Z remote: Counting objects:  46% (23/49)        
+2026-06-28T19:39:54.5509708Z remote: Counting objects:  48% (24/49)        
+2026-06-28T19:39:54.5510182Z remote: Counting objects:  51% (25/49)        
+2026-06-28T19:39:54.5510604Z remote: Counting objects:  53% (26/49)        
+2026-06-28T19:39:54.5511025Z remote: Counting objects:  55% (27/49)        
+2026-06-28T19:39:54.5511418Z remote: Counting objects:  57% (28/49)        
+2026-06-28T19:39:54.5512029Z remote: Counting objects:  59% (29/49)        
+2026-06-28T19:39:54.5512381Z remote: Counting objects:  61% (30/49)        
+2026-06-28T19:39:54.5512711Z remote: Counting objects:  63% (31/49)        
+2026-06-28T19:39:54.5513038Z remote: Counting objects:  65% (32/49)        
+2026-06-28T19:39:54.5513645Z remote: Counting objects:  67% (33/49)        
+2026-06-28T19:39:54.5514002Z remote: Counting objects:  69% (34/49)        
+2026-06-28T19:39:54.5514337Z remote: Counting objects:  71% (35/49)        
+2026-06-28T19:39:54.5514670Z remote: Counting objects:  73% (36/49)        
+2026-06-28T19:39:54.5515041Z remote: Counting objects:  75% (37/49)        
+2026-06-28T19:39:54.5515364Z remote: Counting objects:  77% (38/49)        
+2026-06-28T19:39:54.5515712Z remote: Counting objects:  79% (39/49)        
+2026-06-28T19:39:54.5516044Z remote: Counting objects:  81% (40/49)        
+2026-06-28T19:39:54.5516368Z remote: Counting objects:  83% (41/49)        
+2026-06-28T19:39:54.5516682Z remote: Counting objects:  85% (42/49)        
+2026-06-28T19:39:54.5516999Z remote: Counting objects:  87% (43/49)        
+2026-06-28T19:39:54.5517319Z remote: Counting objects:  89% (44/49)        
+2026-06-28T19:39:54.5517651Z remote: Counting objects:  91% (45/49)        
+2026-06-28T19:39:54.5517975Z remote: Counting objects:  93% (46/49)        
+2026-06-28T19:39:54.5518302Z remote: Counting objects:  95% (47/49)        
+2026-06-28T19:39:54.5518636Z remote: Counting objects:  97% (48/49)        
+2026-06-28T19:39:54.5518965Z remote: Counting objects: 100% (49/49)        
+2026-06-28T19:39:54.5519313Z remote: Counting objects: 100% (49/49), done.        
+2026-06-28T19:39:54.6092689Z remote: Compressing objects:   2% (1/41)        
+2026-06-28T19:39:54.6094341Z remote: Compressing objects:   4% (2/41)        
+2026-06-28T19:39:54.6094867Z remote: Compressing objects:   7% (3/41)        
+2026-06-28T19:39:54.6095319Z remote: Compressing objects:   9% (4/41)        
+2026-06-28T19:39:54.6095765Z remote: Compressing objects:  12% (5/41)        
+2026-06-28T19:39:54.6096199Z remote: Compressing objects:  14% (6/41)        
+2026-06-28T19:39:54.6096633Z remote: Compressing objects:  17% (7/41)        
+2026-06-28T19:39:54.6097068Z remote: Compressing objects:  19% (8/41)        
+2026-06-28T19:39:54.6097502Z remote: Compressing objects:  21% (9/41)        
+2026-06-28T19:39:54.6097946Z remote: Compressing objects:  24% (10/41)        
+2026-06-28T19:39:54.6098397Z remote: Compressing objects:  26% (11/41)        
+2026-06-28T19:39:54.6098843Z remote: Compressing objects:  29% (12/41)        
+2026-06-28T19:39:54.6099286Z remote: Compressing objects:  31% (13/41)        
+2026-06-28T19:39:54.6099752Z remote: Compressing objects:  34% (14/41)        
+2026-06-28T19:39:54.6100222Z remote: Compressing objects:  36% (15/41)        
+2026-06-28T19:39:54.6100661Z remote: Compressing objects:  39% (16/41)        
+2026-06-28T19:39:54.6101101Z remote: Compressing objects:  41% (17/41)        
+2026-06-28T19:39:54.6101566Z remote: Compressing objects:  43% (18/41)        
+2026-06-28T19:39:54.6102060Z remote: Compressing objects:  46% (19/41)        
+2026-06-28T19:39:54.6671297Z remote: Compressing objects:  48% (20/41)        
+2026-06-28T19:39:54.6671865Z remote: Compressing objects:  51% (21/41)        
+2026-06-28T19:39:54.6672472Z remote: Compressing objects:  53% (22/41)        
+2026-06-28T19:39:54.6672987Z remote: Compressing objects:  56% (23/41)        
+2026-06-28T19:39:54.6673445Z remote: Compressing objects:  58% (24/41)        
+2026-06-28T19:39:54.6673895Z remote: Compressing objects:  60% (25/41)        
+2026-06-28T19:39:54.6674620Z remote: Compressing objects:  63% (26/41)        
+2026-06-28T19:39:54.6675076Z remote: Compressing objects:  65% (27/41)        
+2026-06-28T19:39:55.4859033Z remote: Compressing objects:  68% (28/41)        
+2026-06-28T19:39:55.4859859Z remote: Compressing objects:  70% (29/41)        
+2026-06-28T19:39:55.4860369Z remote: Compressing objects:  73% (30/41)        
+2026-06-28T19:39:55.4860773Z remote: Compressing objects:  75% (31/41)        
+2026-06-28T19:39:55.4861178Z remote: Compressing objects:  78% (32/41)        
+2026-06-28T19:39:55.4861564Z remote: Compressing objects:  80% (33/41)        
+2026-06-28T19:39:55.4861947Z remote: Compressing objects:  82% (34/41)        
+2026-06-28T19:39:55.4862492Z remote: Compressing objects:  85% (35/41)        
+2026-06-28T19:39:55.4862895Z remote: Compressing objects:  87% (36/41)        
+2026-06-28T19:39:55.4863290Z remote: Compressing objects:  90% (37/41)        
+2026-06-28T19:39:55.4863680Z remote: Compressing objects:  92% (38/41)        
+2026-06-28T19:39:55.4864147Z remote: Compressing objects:  95% (39/41)        
+2026-06-28T19:39:55.4864546Z remote: Compressing objects:  97% (40/41)        
+2026-06-28T19:39:55.4865405Z remote: Compressing objects: 100% (41/41)        
+2026-06-28T19:39:55.4865886Z remote: Compressing objects: 100% (41/41), done.        
+2026-06-28T19:39:58.8553559Z remote: Total 49 (delta 0), reused 44 (delta 0), pack-reused 0 (from 0)        
+2026-06-28T19:39:58.9004760Z From https://github.com/Vim-01/vimozz
+2026-06-28T19:39:58.9007956Z  * [new ref]         2e1801b9f75c58a5fbc39fc6bf2d6c72a226062a -> origin/master
+2026-06-28T19:39:58.9198167Z ##[endgroup]
+2026-06-28T19:39:58.9198653Z ##[group]Determining the checkout info
+2026-06-28T19:39:58.9201103Z ##[endgroup]
+2026-06-28T19:39:58.9201585Z ##[group]Checking out the ref
+2026-06-28T19:39:58.9208315Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B master refs/remotes/origin/master
+2026-06-28T19:39:59.7197863Z Reset branch 'master'
+2026-06-28T19:39:59.7213926Z branch 'master' set up to track 'origin/master'.
+2026-06-28T19:39:59.7283418Z ##[endgroup]
+2026-06-28T19:39:59.7595858Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format='%H'
+2026-06-28T19:39:59.7859025Z '2e1801b9f75c58a5fbc39fc6bf2d6c72a226062a'
+2026-06-28T19:39:59.8282915Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-28T19:39:59.8284896Z ##[group]Run actions/setup-node@v3
+2026-06-28T19:39:59.8285174Z with:
+2026-06-28T19:39:59.8285348Z   node-version: 18
+2026-06-28T19:39:59.8285536Z   always-auth: false
+2026-06-28T19:39:59.8285734Z   check-latest: false
+2026-06-28T19:39:59.8290397Z   token: ***
+2026-06-28T19:39:59.8290668Z ##[endgroup]
+2026-06-28T19:40:00.1635540Z Attempting to download 18...
+2026-06-28T19:40:00.1815797Z (node:8856) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-28T19:40:00.1816549Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-28T19:40:01.1920604Z Acquiring 18.20.8 - x64 from https://github.com/actions/node-versions/releases/download/18.20.8-14110393767/node-18.20.8-win32-x64.7z
+2026-06-28T19:40:01.5663741Z Extracting ...
+2026-06-28T19:40:03.8178644Z Adding to the cache ...
+2026-06-28T19:40:06.9667755Z ##[group]Environment details
+2026-06-28T19:40:07.5769675Z node: v18.20.8
+2026-06-28T19:40:07.5770124Z npm: 10.8.2
+2026-06-28T19:40:07.5770399Z yarn: 1.22.22
+2026-06-28T19:40:07.5771361Z ##[endgroup]
+2026-06-28T19:40:07.6142371Z ##[group]Run npm ci
+2026-06-28T19:40:07.6142800Z [36;1mnpm ci[0m
+2026-06-28T19:40:07.6274565Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-06-28T19:40:07.6274935Z ##[endgroup]
+2026-06-28T19:40:13.2548683Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2549781Z npm warn EBADENGINE   package: '@electron-internal/extract-zip@1.0.4',
+2026-06-28T19:40:13.2550414Z npm warn EBADENGINE   required: { node: '>=22.12.0' },
+2026-06-28T19:40:13.2550991Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2551442Z npm warn EBADENGINE }
+2026-06-28T19:40:13.2552520Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2553507Z npm warn EBADENGINE   package: '@electron/get@5.0.0',
+2026-06-28T19:40:13.2554013Z npm warn EBADENGINE   required: { node: '>=22.12.0' },
+2026-06-28T19:40:13.2554540Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2555019Z npm warn EBADENGINE }
+2026-06-28T19:40:13.2578696Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2579192Z npm warn EBADENGINE   package: 'electron@42.5.0',
+2026-06-28T19:40:13.2579616Z npm warn EBADENGINE   required: { node: '>= 22.12.0' },
+2026-06-28T19:40:13.2580100Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2580480Z npm warn EBADENGINE }
+2026-06-28T19:40:13.2593642Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2594322Z npm warn EBADENGINE   package: 'is-in-ssh@1.0.0',
+2026-06-28T19:40:13.2594980Z npm warn EBADENGINE   required: { node: '>=20' },
+2026-06-28T19:40:13.2595751Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2596384Z npm warn EBADENGINE }
+2026-06-28T19:40:13.2604374Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2604928Z npm warn EBADENGINE   package: 'open@11.0.0',
+2026-06-28T19:40:13.2605317Z npm warn EBADENGINE   required: { node: '>=20' },
+2026-06-28T19:40:13.2605766Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2606111Z npm warn EBADENGINE }
+2026-06-28T19:40:13.2611929Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2612505Z npm warn EBADENGINE   package: 'powershell-utils@0.1.0',
+2026-06-28T19:40:13.2612912Z npm warn EBADENGINE   required: { node: '>=20' },
+2026-06-28T19:40:13.2613340Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2613696Z npm warn EBADENGINE }
+2026-06-28T19:40:13.2624943Z npm warn EBADENGINE Unsupported engine {
+2026-06-28T19:40:13.2625541Z npm warn EBADENGINE   package: 'wsl-utils@0.3.1',
+2026-06-28T19:40:13.2626069Z npm warn EBADENGINE   required: { node: '>=20' },
+2026-06-28T19:40:13.2626506Z npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+2026-06-28T19:40:13.2626856Z npm warn EBADENGINE }
+2026-06-28T19:40:15.8287899Z npm warn deprecated whatwg-encoding@2.0.0: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-06-28T19:40:16.3818322Z npm warn deprecated yt-dlp-wrap@2.3.12: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+2026-06-28T19:40:16.4866911Z npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2026-06-28T19:40:17.0563914Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-06-28T19:40:18.6987388Z npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-28T19:40:21.4587240Z npm warn deprecated tar@6.2.1: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-28T19:40:22.5441735Z npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+2026-06-28T19:40:22.8177402Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-28T19:40:54.2489367Z 
+2026-06-28T19:40:54.2489975Z > vimozz@1.0.0 postinstall
+2026-06-28T19:40:54.2490856Z > node scripts/download-xray.js
+2026-06-28T19:40:54.2491158Z 
+2026-06-28T19:40:54.3250294Z Downloading Xray for Linux...
+2026-06-28T19:40:55.2183094Z Downloading Xray for Windows...
+2026-06-28T19:40:55.8997587Z Xray binaries downloaded successfully.
+2026-06-28T19:40:55.9270015Z 
+2026-06-28T19:40:55.9270946Z added 730 packages, and audited 731 packages in 44s
+2026-06-28T19:40:55.9272039Z 
+2026-06-28T19:40:55.9273079Z 141 packages are looking for funding
+2026-06-28T19:40:55.9273643Z   run `npm fund` for details
+2026-06-28T19:40:55.9618719Z 
+2026-06-28T19:40:55.9619334Z 13 vulnerabilities (5 moderate, 8 high)
+2026-06-28T19:40:55.9619593Z 
+2026-06-28T19:40:55.9619824Z To address issues that do not require attention, run:
+2026-06-28T19:40:55.9620153Z   npm audit fix
+2026-06-28T19:40:55.9620279Z 
+2026-06-28T19:40:55.9620499Z To address all issues (including breaking changes), run:
+2026-06-28T19:40:55.9620837Z   npm audit fix --force
+2026-06-28T19:40:55.9620983Z 
+2026-06-28T19:40:55.9621093Z Run `npm audit` for details.
+2026-06-28T19:40:56.2733719Z ##[group]Run npm run build
+2026-06-28T19:40:56.2734031Z [36;1mnpm run build[0m
+2026-06-28T19:40:56.2793910Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-06-28T19:40:56.2794254Z ##[endgroup]
+2026-06-28T19:40:56.9139954Z 
+2026-06-28T19:40:56.9140602Z > vimozz@1.0.0 build
+2026-06-28T19:40:56.9141235Z > npm run build:main && npm run build:renderer
+2026-06-28T19:40:56.9141654Z 
+2026-06-28T19:40:57.2666502Z 
+2026-06-28T19:40:57.2667035Z > vimozz@1.0.0 build:main
+2026-06-28T19:40:57.2667524Z > tsc
+2026-06-28T19:40:57.2667685Z 
+2026-06-28T19:40:59.5258673Z 
+2026-06-28T19:40:59.5259278Z > vimozz@1.0.0 build:renderer
+2026-06-28T19:40:59.5259974Z > webpack --config webpack.renderer.config.js
+2026-06-28T19:40:59.5260395Z 
+2026-06-28T19:41:12.7070676Z asset [1m[32mrenderer.js[39m[22m 3.12 MiB [1m[32m[emitted][39m[22m (name: main) 1 related asset
+2026-06-28T19:41:12.7072582Z asset [1m[32mreactPlayerPreview.renderer.js[39m[22m 5.36 KiB [1m[32m[emitted][39m[22m (name: reactPlayerPreview) 1 related asset
+2026-06-28T19:41:12.7074024Z asset [1m[32mindex.html[39m[22m 1 KiB [1m[32m[emitted][39m[22m
+2026-06-28T19:41:12.7075298Z orphan modules 6.82 MiB [1m[33m[orphan][39m[22m 11156 modules
+2026-06-28T19:41:12.7077300Z runtime modules 7.12 KiB 11 modules
+2026-06-28T19:41:12.7077827Z cacheable modules 2.49 MiB 351 modules
+2026-06-28T19:41:12.7078690Z webpack 5.107.2 compiled [1m[32msuccessfully[39m[22m in 11922 ms
+2026-06-28T19:41:12.9433119Z ##[group]Run npx electron-builder --win --publish never
+2026-06-28T19:41:12.9433579Z [36;1mnpx electron-builder --win --publish never[0m
+2026-06-28T19:41:12.9491803Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-06-28T19:41:12.9492146Z ##[endgroup]
+2026-06-28T19:41:14.8321929Z   • electron-builder  version=24.13.3 os=10.0.26100
+2026-06-28T19:41:14.8397326Z   • loaded configuration  file=package.json ("build" field)
+2026-06-28T19:41:15.0899974Z   • packaging       platform=win32 arch=x64 electron=42.5.0 appOutDir=release\win-unpacked
+2026-06-28T19:41:15.4516313Z   • downloading     url=https://github.com/electron/electron/releases/download/v42.5.0/electron-v42.5.0-win32-x64.zip size=148 MB parts=8
+2026-06-28T19:41:15.8610493Z   • downloaded      url=https://github.com/electron/electron/releases/download/v42.5.0/electron-v42.5.0-win32-x64.zip duration=756ms
+2026-06-28T19:41:39.9977404Z   • default Electron icon is used  reason=application icon is not set
+2026-06-28T19:41:40.3025969Z   • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z size=5.6 MB parts=1
+2026-06-28T19:41:40.3490003Z   • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/winCodeSign-2.6.0/winCodeSign-2.6.0.7z duration=336ms
+2026-06-28T19:41:41.1484635Z   • building        target=nsis file=release\Vimozz Setup 1.0.0.exe archs=x64 oneClick=true perMachine=false
+2026-06-28T19:41:41.3006869Z   • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z size=1.3 MB parts=1
+2026-06-28T19:41:41.3504815Z   • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z duration=185ms
+2026-06-28T19:42:27.4107605Z   • downloading     url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z size=731 kB parts=1
+2026-06-28T19:42:27.4242921Z   • downloaded      url=https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z duration=326ms
+2026-06-28T19:42:29.8557859Z   • building block map  blockMapFile=release\Vimozz Setup 1.0.0.exe.blockmap
+2026-06-28T19:42:31.1671792Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-28T19:42:31.1673222Z ##[group]Run softprops/action-gh-release@v1
+2026-06-28T19:42:31.1673499Z with:
+2026-06-28T19:42:31.1673664Z   tag_name: v1.0.0
+2026-06-28T19:42:31.1673856Z   files: release/*.exe
+2026-06-28T19:42:31.1677237Z   token: ***
+2026-06-28T19:42:31.1677491Z env:
+2026-06-28T19:42:31.1680369Z   GITHUB_TOKEN: ***
+2026-06-28T19:42:31.1680571Z ##[endgroup]
+2026-06-28T19:42:31.2642827Z (node:7804) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-28T19:42:31.2643714Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-28T19:42:31.2833378Z (node:7804) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-06-28T19:42:32.0016359Z ⚠️ Unexpected error fetching GitHub release for tag refs/heads/master: HttpError: Resource not accessible by integration
+2026-06-28T19:42:32.0035405Z ##[error]Resource not accessible by integration
+2026-06-28T19:42:32.0335263Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-28T19:42:32.0336597Z Post job cleanup.
+2026-06-28T19:42:32.1265378Z (node:8788) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-28T19:42:32.1268121Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-28T19:42:32.2136235Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-06-28T19:42:32.2415793Z git version 2.54.0.windows.1
+2026-06-28T19:42:32.2498836Z Temporarily overriding HOME='D:\a\_temp\54289ee0-71bc-4a79-bf2e-5ac67f38965b' before making global git config changes
+2026-06-28T19:42:32.2501685Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-28T19:42:32.2516004Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\vimozz\vimozz
+2026-06-28T19:42:32.2870581Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-06-28T19:42:32.3159696Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-06-28T19:42:32.8768242Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-28T19:42:32.9035009Z http.https://github.com/.extraheader
+2026-06-28T19:42:32.9077734Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-06-28T19:42:32.9458031Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-06-28T19:42:33.5216307Z Cleaning up orphan processes
+2026-06-28T19:42:33.5246572Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v3, actions/setup-node@v3, softprops/action-gh-release@v1. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
