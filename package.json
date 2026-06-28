@@ -1,20 +1,21 @@
 {
-  "name": "twitch-music-bot",
+  "name": "vimozz",
   "version": "1.0.0",
-  "description": "Twitch music request bot with YouTube integration",
+  "description": "Vimozz - Twitch Music Bot with YouTube integration and anti-censorship bypass",
   "main": "dist/main/main.js",
   "scripts": {
-    "start": "npm run build && /usr/bin/electron . --ozone-platform=wayland --enable-features=WaylandWindowDecorations",
-    "dev": "concurrently \"npm run watch:main\" \"npm run watch:renderer\" \"http-server dist/renderer -p 3000 --cors -c-1\" \"wait-on http://localhost:3000 && /usr/bin/electron . --ozone-platform=wayland --enable-features=WaylandWindowDecorations\"",
+    "start": "npm run build && electron .",
+    "dev": "concurrently \"npm run watch:main\" \"npm run watch:renderer\" \"http-server dist/renderer -p 3000 --cors -c-1\" \"wait-on http://localhost:3000 && electron .\"",
     "build": "npm run build:main && npm run build:renderer",
     "build:main": "tsc",
     "build:renderer": "webpack --config webpack.renderer.config.js",
     "watch:main": "tsc -w",
-    "watch:renderer": "webpack --config webpack.renderer.config.js --watch"
+    "watch:renderer": "webpack --config webpack.renderer.config.js --watch",
+    "postinstall": "node scripts/download-xray.js"
   },
   "build": {
-    "appId": "com.twitchmusicbot.app",
-    "productName": "Twitch Music Bot",
+    "appId": "com.vimozz.app",
+    "productName": "Vimozz",
     "directories": {
       "output": "dist"
     },
@@ -36,7 +37,7 @@
     "youtube",
     "electron"
   ],
-  "author": "Your Name",
+  "author": "vim",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.19.42",
@@ -44,7 +45,7 @@
     "@types/react-dom": "^18.0.0",
     "concurrently": "^8.0.0",
     "css-loader": "^7.1.4",
-    "electron": "^28.3.3",
+    "electron": "^42.5.0",
     "electron-builder": "^24.0.0",
     "html-webpack-plugin": "^5.0.0",
     "http-server": "^14.1.1",

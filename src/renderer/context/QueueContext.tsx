@@ -20,6 +20,7 @@ interface QueueState {
   isPlaying: boolean;
   progress: number; // in seconds
   volume: number;
+  selectedRewardId: string;
 }
 
 interface QueueContextType extends QueueState {
@@ -33,6 +34,7 @@ interface QueueContextType extends QueueState {
   updateProgress: (prog: number) => void;
   updateDuration: (dur: number) => void;
   skipTrack: () => void;
+  setSelectedRewardId: (id: string) => void;
 }
 
 const defaultState: QueueState = {
@@ -42,11 +44,12 @@ const defaultState: QueueState = {
   isPlaying: false,
   progress: 0,
   volume: 50,
+  selectedRewardId: '',
 };
 
 const QueueContext = createContext<QueueContextType | undefined>(undefined);
 
-const BROADCAST_CHANNEL_NAME = 'trula_queue_sync';
+const BROADCAST_CHANNEL_NAME = 'vimozz_queue_sync';
 
 export const QueueProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, setState] = useState<QueueState>(() => {
@@ -209,10 +212,20 @@ export const QueueProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     playNext();
   }, [playNext]);
 
+  const setSelectedRewardId = useCallback((id: string) => {
+    setState(prev => ({ ...prev, selectedRewardId: id }));
+  }, []);
+
   // IPC listener for Twitch Redemptions
   useEffect(() => {
     if ((window as any).electronAPI) {
       (window as any).electronAPI.onRewardRedemption((event: any, redemption: any) => {
+        // If a reward is selected, filter by it. Otherwise, accept all for testing.
+        if (state.selectedRewardId && redemption.rewardId !== state.selectedRewardId) {
+           console.log('Ignored redemption for wrong reward:', redemption.rewardTitle);
+           return;
+        }
+
         // Attempt to extract videoId from userInput
         const urlMatch = redemption.userInput.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
         const videoId = urlMatch ? urlMatch[1] : null;
@@ -221,7 +234,7 @@ export const QueueProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         }
       });
     }
-  }, [addRequest]);
+  }, [addRequest, state.selectedRewardId]);
 
   return (
     <QueueContext.Provider value={{
@@ -235,7 +248,8 @@ export const QueueProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       setVolume,
       updateProgress,
       updateDuration,
-      skipTrack
+      skipTrack,
+      setSelectedRewardId
     }}>
       {children}
     </QueueContext.Provider>

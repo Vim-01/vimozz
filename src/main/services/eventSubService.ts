@@ -7,6 +7,7 @@ export interface RewardRedemption {
   id: string;
   userId: string;
   userName: string;
+  rewardId: string;
   rewardTitle: string;
   userInput: string;
   status: string;
@@ -92,6 +93,7 @@ export class EventSubService {
           id: redemption.id,
           userId: redemption.userId,
           userName: redemption.userName,
+          rewardId: redemption.rewardId,
           rewardTitle: redemption.rewardTitle,
           userInput: redemption.input,
           status: redemption.status
@@ -118,5 +120,37 @@ export class EventSubService {
 
   getUserId(): string | null {
     return this.userId;
+  }
+
+  async getCustomRewards(): Promise<any[]> {
+    if (!this.userId || !this.authProvider) {
+      throw new Error('Not initialized');
+    }
+    
+    // We can use the ApiClient or just simple fetch
+    try {
+      const rewards = await this.apiClient?.channelPoints.getCustomRewards(this.userId);
+      return rewards ? rewards.map(r => ({
+        id: r.id,
+        title: r.title,
+        prompt: r.prompt,
+        cost: r.cost,
+        isEnabled: r.isEnabled,
+        isUserInputRequired: r.userInputRequired
+      })) : [];
+    } catch (e) {
+      console.error('Error fetching custom rewards via twurple API Client:', e);
+      // Fallback to axios if ApiClient method name is slightly different in twurple
+      const token = await this.authProvider.getAccessTokenForUser(this.userId);
+      if (!token) return [];
+      
+      const response = await axios.get(`https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=${this.userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token.accessToken}`,
+          'Client-Id': process.env.TWITCH_CLIENT_ID || ''
+        }
+      });
+      return response.data.data;
+    }
   }
 }

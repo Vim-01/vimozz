@@ -14,6 +14,7 @@ declare global {
       onTwitchAuthSuccess: (callback: (event: any, tokens: any) => void) => void;
       onTwitchAuthError: (callback: (event: any, error: string) => void) => void;
       onRewardRedemption: (callback: (event: any, redemption: any) => void) => void;
+      getCustomRewards: () => Promise<any[]>;
     };
   }
 }

@@ -4,3 +4,8 @@ dist/
 *.log
 .DS_Store
 sidecar/youtubeUnblock
+ЛОГИ ЗДЕСЬ/
+twitch-cli_*/
+test_*.js
+agents.md
+arch-testing-guide.md

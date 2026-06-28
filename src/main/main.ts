@@ -3,6 +3,7 @@ dotenv.config();
 
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 import { CallbackServer } from './services/callbackServer';
 import { TwitchAuthService } from './services/twitchAuthService';
 import { EventSubService, RewardRedemption } from './services/eventSubService';
@@ -14,6 +15,8 @@ const eventSubService = new EventSubService();
 const callbackServer = new CallbackServer(twitchAuthService);
 const bypassService = new BypassService();
 
+app.commandLine.appendSwitch('enable-features', 'WaylandWindowDecorations');
+app.commandLine.appendSwitch('ozone-platform', 'wayland');
 app.disableHardwareAcceleration();
 
 let mainWindow: any = null;
@@ -58,9 +61,14 @@ function createWindow() {
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
+  bypassService.stop();
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('before-quit', () => {
+  bypassService.stop();
 });
 
 // Twitch
@@ -99,10 +107,16 @@ ipcMain.handle('get-obs-window-id', () => {
 ipcMain.handle('start-vless', async (event, vlessUrl: string) => {
   try {
     const port = await bypassService.startVless(vlessUrl);
-    await session.defaultSession.setProxy({
-      proxyRules: `socks5://127.0.0.1:${port}`,
-      proxyBypassRules: 'localhost,127.0.0.1,::1'
-    });
+    
+    // Electron supports http:// URIs for PAC scripts reliably
+    const pacUrl = `http://localhost:3001/proxy.pac?port=${port}`;
+    await session.defaultSession.setProxy({ pacScript: pacUrl });
+    console.log('PAC script proxy configured successfully:', pacUrl);
+    
+    // Also set env proxy for Node.js modules (axios, yt-dlp)
+    process.env.http_proxy = 'http://127.0.0.1:10809';
+    process.env.https_proxy = 'http://127.0.0.1:10809';
+    
     return { success: true };
   } catch (error: any) {
     console.error('Failed to start VLESS proxy:', error);
@@ -113,16 +127,45 @@ ipcMain.handle('start-vless', async (event, vlessUrl: string) => {
 ipcMain.handle('stop-vless', async () => {
   bypassService.stop();
   await session.defaultSession.setProxy({ proxyRules: '', proxyBypassRules: '' });
+  delete process.env.http_proxy;
+  delete process.env.https_proxy;
   return { success: true };
 });
 
 ipcMain.handle('fetch-youtube-title', async (event, videoId: string) => {
   try {
-    const axios = require('axios');
-    const response = await axios.get(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
-    return response.data.title || 'Unknown Title';
+    const { net } = require('electron');
+    return new Promise((resolve) => {
+      const request = net.request(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+      request.on('response', (response: any) => {
+        let data = '';
+        response.on('data', (chunk: any) => { data += chunk; });
+        response.on('end', () => {
+          try {
+            const json = JSON.parse(data);
+            resolve(json.title || 'Unknown Title');
+          } catch (e) {
+            resolve('Unknown Title');
+          }
+        });
+      });
+      request.on('error', (error: any) => {
+        console.error('Failed to fetch youtube title:', error);
+        resolve('Unknown Title');
+      });
+      request.end();
+    });
   } catch (error) {
     console.error('Failed to fetch youtube title:', error);
     return 'Unknown Title';
+  }
+});
+
+ipcMain.handle('get-custom-rewards', async () => {
+  try {
+    return await eventSubService.getCustomRewards();
+  } catch (error: any) {
+    console.error('Failed to get custom rewards:', error);
+    return { error: error.message };
   }
 });

@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   startVless: (url: string) => ipcRenderer.invoke('start-vless', url),
   stopVless: () => ipcRenderer.invoke('stop-vless'),
   fetchYoutubeTitle: (videoId: string) => ipcRenderer.invoke('fetch-youtube-title', videoId),
+  getCustomRewards: () => ipcRenderer.invoke('get-custom-rewards'),
 
   onTwitchAuthSuccess: (callback: any) => {
     ipcRenderer.on('twitch-auth-success', callback);

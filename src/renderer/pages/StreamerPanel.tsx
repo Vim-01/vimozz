@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
   Container, Typography, Box, Button, Paper, List, ListItem, ListItemText,
   IconButton, Divider, Chip, TextField, Slider, Tabs, Tab, Switch, FormControlLabel,
-  Avatar, Card, CardContent
+  Avatar, Card, CardContent, Select, MenuItem, FormControl, InputLabel,
+  Snackbar, Alert
 } from '@mui/material';
 import {
   PlayArrow, Pause, SkipNext, VolumeUp, Settings, QueueMusic, Link as LinkIcon
@@ -20,12 +21,57 @@ const StreamerPanel: React.FC = () => {
   const { 
     requestQueue, streamerPlaylist, currentTrack, isPlaying, 
     progress, volume, addStreamerTrack, removeRequest, 
-    removeStreamerTrack, playNext, togglePlayPause, setVolume, skipTrack 
+    removeStreamerTrack, playNext, togglePlayPause, setVolume, skipTrack,
+    selectedRewardId, setSelectedRewardId
   } = useQueue();
 
   const [streamerUrl, setStreamerUrl] = useState('');
   const [vlessUrl, setVlessUrl] = useState('');
   const [useVless, setUseVless] = useState(false);
+  const [rewards, setRewards] = useState<any[]>([]);
+  const [snackbar, setSnackbar] = useState<{open: boolean, message: string, severity: 'success' | 'error' | 'info'}>({open: false, message: '', severity: 'info'});
+
+  const showNotification = (message: string, severity: 'success' | 'error' | 'info' = 'info') => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  React.useEffect(() => {
+    if ((window as any).electronAPI) {
+      (window as any).electronAPI.onTwitchAuthSuccess(async (_event: any, tokens: any) => {
+        showNotification('Авторизация успешна! Инициализация EventSub...', 'info');
+        const res = await (window as any).electronAPI.initializeEventSub(tokens);
+        if (res.success) {
+          showNotification('EventSub успешно запущен! Награды можно загружать.', 'success');
+        } else {
+          showNotification(`Ошибка запуска EventSub: ${res.error}`, 'error');
+        }
+      });
+
+      (window as any).electronAPI.onTwitchAuthError((_event: any, error: string) => {
+        showNotification(`Ошибка авторизации Twitch: ${error}`, 'error');
+      });
+
+      (window as any).electronAPI.onRewardRedemption((_event: any, data: any) => {
+        if (!selectedRewardId || selectedRewardId === '' || selectedRewardId === data.rewardId) {
+          showNotification(`Выкуп награды от ${data.userName}!`, 'info');
+          // Actually we need QueueContext to add the request, but for now just show notif.
+        }
+      });
+    }
+  }, [selectedRewardId]);
+
+  const fetchRewards = async () => {
+    if ((window as any).electronAPI) {
+      const rwds = await (window as any).electronAPI.getCustomRewards();
+      if (!rwds.error) {
+        setRewards(rwds);
+        showNotification('Награды успешно загружены!', 'success');
+      } else {
+        console.error(rwds.error);
+        showNotification(`Ошибка загрузки наград: ${rwds.error}`, 'error');
+      }
+    }
+  };
 
   const handleAddStreamerTrack = () => {
     const id = extractVideoId(streamerUrl);
@@ -40,11 +86,35 @@ const StreamerPanel: React.FC = () => {
     setUseVless(checked);
     if (checked && vlessUrl) {
       if ((window as any).electronAPI) {
-        await (window as any).electronAPI.startVless(vlessUrl);
+        const res = await (window as any).electronAPI.startVless(vlessUrl);
+        if (res.success) {
+          showNotification('VLESS прокси успешно запущен и применен к YouTube!', 'success');
+        } else {
+          showNotification(`Ошибка запуска VLESS: ${res.error}`, 'error');
+          setUseVless(false);
+        }
       }
     } else {
       if ((window as any).electronAPI) {
         await (window as any).electronAPI.stopVless();
+        showNotification('VLESS прокси отключен', 'info');
+      }
+    }
+  };
+
+  const applyVless = async () => {
+    if (!vlessUrl) {
+      showNotification('Введите ссылку VLESS', 'error');
+      return;
+    }
+    setUseVless(true);
+    if ((window as any).electronAPI) {
+      const res = await (window as any).electronAPI.startVless(vlessUrl);
+      if (res.success) {
+        showNotification('VLESS прокси успешно применен!', 'success');
+      } else {
+        showNotification(`Ошибка запуска VLESS: ${res.error}`, 'error');
+        setUseVless(false);
       }
     }
   };
@@ -180,7 +250,7 @@ const StreamerPanel: React.FC = () => {
             />
           )}
           {useVless && (
-            <Button variant="contained" onClick={() => handleVlessToggle({ target: { checked: true } } as any)} sx={{ mt: 2 }}>
+            <Button variant="contained" onClick={applyVless} sx={{ mt: 2 }}>
               Apply & Connect
             </Button>
           )}
@@ -188,14 +258,49 @@ const StreamerPanel: React.FC = () => {
           <Divider sx={{ my: 4 }} />
           
           <Typography variant="h6" mb={3}>Twitch Settings</Typography>
-          <Button variant="outlined" color="primary" onClick={() => (window as any).electronAPI?.twitchLogin()}>
+          <Button variant="outlined" color="primary" onClick={async () => {
+            await (window as any).electronAPI?.twitchLogin();
+            showNotification('Ожидание авторизации...', 'info');
+          }} sx={{ mb: 2, mr: 2 }}>
             Login with Twitch
           </Button>
+          <Button variant="outlined" color="secondary" onClick={fetchRewards} sx={{ mb: 2 }}>
+            Refresh Rewards
+          </Button>
+          
+          <Box mt={2}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel>Music Request Reward</InputLabel>
+              <Select
+                value={selectedRewardId}
+                onChange={(e) => setSelectedRewardId(e.target.value as string)}
+                label="Music Request Reward"
+              >
+                <MenuItem value="">
+                  <em>Any Reward (Testing)</em>
+                </MenuItem>
+                {rewards.map(r => (
+                  <MenuItem key={r.id} value={r.id}>{r.title} ({r.cost} pts)</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
           <Typography variant="body2" color="text.secondary" mt={2}>
             Please configure EventSub Client ID and Secret in your .env file or settings.
           </Typography>
         </Paper>
       )}
+
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={4000} 
+        onClose={() => setSnackbar({...snackbar, open: false})}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbar({...snackbar, open: false})} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

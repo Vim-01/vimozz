@@ -27,8 +27,14 @@ export class BypassService {
             const config = this.parseVlessUrlToXrayConfig(vlessUrl);
             fs.writeFileSync(this.configPath, JSON.stringify(config, null, 2));
             
-            this.xrayProcess = spawn(this.xrayExecutable, ['run', '-c', this.configPath], {
-                stdio: 'ignore'
+            this.xrayProcess = spawn(this.xrayExecutable, ['run', '-c', this.configPath]);
+
+            this.xrayProcess.stdout?.on('data', (data) => {
+                console.log(`Xray stdout: ${data}`);
+            });
+
+            this.xrayProcess.stderr?.on('data', (data) => {
+                console.error(`Xray stderr: ${data}`);
             });
 
             this.xrayProcess.on('error', (err) => {
@@ -119,10 +125,23 @@ export class BypassService {
                 multiMode: params.get('mode') === 'multi'
             };
         } else if (type === 'xhttp') {
+            let parsedHost = params.get('host');
             outbound.streamSettings.xhttpSettings = {
                 path: params.get('path') || '/',
-                host: params.get('host') || sni
+                host: parsedHost || sni
             };
+            if (params.has('mode')) {
+                outbound.streamSettings.xhttpSettings.mode = params.get('mode');
+            }
+            if (params.has('extra')) {
+                try {
+                    const extraData = JSON.parse(params.get('extra')!);
+                    // Merge extra properties directly into xhttpSettings as required by newer Xray schemas
+                    Object.assign(outbound.streamSettings.xhttpSettings, extraData);
+                } catch (e) {
+                    console.error('Failed to parse xhttp extra', e);
+                }
+            }
         }
 
         return {
@@ -132,6 +151,11 @@ export class BypassService {
                 listen: "127.0.0.1",
                 protocol: "socks",
                 settings: { udp: true }
+            }, {
+                port: 10809,
+                listen: "127.0.0.1",
+                protocol: "http",
+                settings: {}
             }],
             outbounds: [
                 outbound,
